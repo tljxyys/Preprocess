@@ -1,7 +1,7 @@
 # MRI 数据预处理代码说明 / MRI Data Preprocessing Code Documentation
 
 ## 概述 / Overview
-本代码实现了对fastMRI数据集中的单线圈膝关节MRI数据进行解压、预处理和图像重建的功能。主要包含tar文件解压缩和HDF5数据处理两大模块，能够从k-space数据重建MRI图像，并以指定帧数保存为PNG格式。  
+FastMRI_H5_to_PNG代码文件实现了对fastMRI数据集中的单线圈膝关节MRI数据进行解压、预处理和图像重建的功能。主要包含tar文件解压缩和HDF5数据处理两大模块，能够从k-space数据重建MRI图像，并以指定帧数保存为PNG格式。  
 This code implements functionalities for decompressing, preprocessing, and reconstructing single-coil knee MRI data from the fastMRI dataset. It consists of two main modules: tar file extraction and HDF5 data processing, which reconstruct MRI images from k-space data and save specified frames in PNG format.
 
 ## 主要功能 / Key Features
@@ -14,9 +14,9 @@ This code implements functionalities for decompressing, preprocessing, and recon
 ### 2. 数据处理模块 / Data Processing Module
 - 读取HDF5格式的k-space数据  
   Reads k-space data in HDF5 format
-- 执行快速傅里叶逆变换(IFFT)重建图像  
+- 执行傅里叶逆变换(IFFT)重建图像  
   Performs image reconstruction using Inverse Fast Fourier Transform (IFFT)
-- 自动标准化图像强度值(0-255范围)  
+- 标准化图像强度值(0-255范围)  
   Automatically normalizes image intensity values (0-255 range)
 - 按病例ID创建分层目录结构  
   Creates hierarchical directory structure by case ID
@@ -50,3 +50,24 @@ process_h5_folder(
     output_root="/output/image/root/", # 图像输出根目录 / Image output root
     frames_per_file=20                # 每例保存帧数 / Frames per case
 )
+
+## 可用数据集 / Available Datasets
+### 预处理的膝关节MRI图像 / Preprocessed Knee MRI Images
+我们提供了基于fastMRI官方数据knee_singlecoil_val.tar预处理的图像样本集：  
+We provide preprocessed image samples based knee_singlecoil_val.tar on the official fastMRI data:
+
+[![Download](https://img.shields.io/badge/Download_PNG_Images-Google_Drive-blue?logo=google-drive)](https://drive.google.com/file/d/1JGFZkP71IPX16ZYX1TWSs5xmvBUnpaAu/view?usp=sharing)
+
+**数据集特性 / Dataset Characteristics**
+- 原始来源: fastMRI knee_singlecoil_val 验证集  
+  Original Source: fastMRI knee_singlecoil_val validation set
+- 处理方式: 每个病例均匀采样20帧  
+  Processing: 20 uniformly sampled frames per case
+- 格式规格: PNG格式 (368x640 分辨率)  
+  Format: PNG (368x640 resolution)
+- 命名规范: 
+  ```bash
+  {case_id}/
+  ├── {case_id}_slice0000.png  # 格式保留原始相位信息
+  ├── ...
+  └── {case_id}_slice0019.png  # Frame indices preserved
