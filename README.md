@@ -31,14 +31,6 @@ The raw data used by this code comes from the fastMRI project by NYU Langone Hea
 **重要提示 / Important Notice**  
 使用者应严格遵守fastMRI数据使用协议:  
 Users must strictly adhere to the fastMRI data usage agreement:
-1. 仅可用于非商业研究用途  
-   For non-commercial research use only
-2. 必须引用官方论文(Zbontar et al., 2018)  
-   Mandatory citation of the original paper (Zbontar et al., 2018)
-3. 禁止患者身份识别  
-   Prohibition of patient identification
-4. 遵守CC-BY-NC 4.0许可条款  
-   Compliance with CC-BY-NC 4.0 license terms
 
 ## 使用说明 / Usage Instructions
 ### 环境要求 / Requirements
