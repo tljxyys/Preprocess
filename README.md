@@ -53,7 +53,7 @@ process_h5_folder(
 ```
 
 ## 可用数据集 / Available Datasets
-### 预处理的膝关节MRI图像 / Preprocessed Knee MRI Images
+### 预处理的FastMRI数据集膝关节MRI图像 / Preprocessed Knee MRI Images
 我们提供了基于fastMRI官方数据knee_singlecoil_val.tar预处理的图像样本集：  
 We provide preprocessed image samples based knee_singlecoil_val.tar on the official fastMRI data:
 
@@ -73,3 +73,31 @@ We provide preprocessed image samples based knee_singlecoil_val.tar on the offic
   ├── ...
   └── {case_id}_slice0019.png  # Frame indices preserved
   ```
+
+### IXI T2模态预处理图像 / IXI T2 Preprocessed Images
+新增基于IXI数据集的预处理结果（将NIFTI文件转为PNG图像）：  
+Newly added high-quality preprocessed data from IXI dataset:
+
+[![Download](https://img.shields.io/badge/下载_IXI_T2数据集-Google_Drive-important?logo=google-drive&style=flat-square)](https://drive.google.com/file/d/1O53qoZMVbGh0hP1m9nuPoLeSIBU3CU7H/view?usp=sharing)
+
+**核心参数 / Key Specifications**
+| 属性                  | 参数值                     | 英文说明                    |
+|-----------------------|--------------------------|---------------------------|
+| 原始数据集             | IXI-T2                  | Source Dataset: IXI-T2    |
+| 病例数量              | 578 cases               | Total Cases: 578          |
+| 切片总量              | 11,560 slices           | Total Slices: 11,560       |
+| 空间分辨率            | 256×256                 | Spatial Resolution: 256×256|
+| 采样策略              | 均匀采样20帧             | Sampling: 20 uniform slices|
+
+**文件结构样例 / File Structure Example**
+```bash
+IXI-T2-PNG/
+├─ IXI01234/
+│  ├─ IXI01234_slice_0000.png  # 首帧
+│  ├─ IXI01234_slice_0001.png
+│  ├──...
+│  └─ IXI01234_slice_0019.png  # 末帧
+└─ IXI05678/
+   ├─ IXI05678_slice_0000.png
+   └──...
+```
