@@ -1,0 +1,123 @@
+import tarfile
+import nibabel as nib
+import numpy as np
+from pathlib import Path
+from PIL import Image
+from tqdm import tqdm
+
+
+def unzip_tar(tar_path: str, extract_dir: str) -> None:
+    """解压TAR文件到指定目录
+    Extract TAR file to target directory
+
+    Args:
+        tar_path (str): TAR文件路径 / Path to input tar file
+        extract_dir (str): 解压输出目录 / Extraction directory
+    """
+    print(f"正在解压文件: {Path(tar_path).name}")
+    Path(extract_dir).mkdir(parents=True, exist_ok=True)
+
+    with tarfile.open(tar_path) as tar:
+        tar.extractall(path=extract_dir)
+
+
+def select_slices(total_slices: int, select_num: int) -> np.ndarray:
+    """均匀选择指定数量的切片索引
+    Uniformly select slice indices
+
+    Args:
+        total_slices (int): 总切片数 / Total number of slices
+        select_num (int): 需选择的切片数 / Number of slices to select
+
+    Returns:
+        np.ndarray: 选择的切片索引数组 / Selected slice indices
+    """
+    return np.linspace(0, total_slices - 1, select_num, dtype=int)
+
+
+def process_nifti_file(file_path: Path, output_dir: Path, slices_per_volume: int) -> None:
+    """处理单个NIFTI文件
+    Process single NIFTI file
+
+    Args:
+        file_path (Path): NIFTI文件路径 / Path to NIFTI file
+        output_dir (Path): 输出目录 / Output directory
+        slices_per_volume (int): 每卷选取切片数 / Slices per volume
+    """
+    try:
+        img = nib.load(file_path)
+        data = img.get_fdata()
+        dim = data.ndim
+
+        # 确定切片轴
+        slice_axis = 2 if dim >= 3 else 0
+        num_slices = data.shape[slice_axis]
+
+        # 生成切片索引
+        selected_idx = select_slices(num_slices, slices_per_volume)
+
+        # 创建病例输出目录
+        case_id = file_path.stem.split('.')[0]
+        case_dir = output_dir / case_id
+        case_dir.mkdir(exist_ok=True)
+
+        # 处理选定切片
+        for i in tqdm(selected_idx, desc=f"处理 {case_id}", leave=False):
+            # 提取切片数据
+            if dim == 3:
+                slice_data = data[:, :, i]
+            elif dim == 4:  # 处理4D数据
+                slice_data = data[:, :, i, 0]
+            else:
+                raise ValueError(f"不支持{data.ndim}维数据")
+
+            # 图像处理流程
+            slice_norm = (slice_data - np.min(slice_data)) / (np.ptp(slice_data) + 1e-8) * 255
+            slice_norm = slice_norm.T.astype(np.uint8)  # 转置校正方向
+
+            # 保存图像
+            Image.fromarray(slice_norm).save(case_dir / f"{case_id}_slice_{i:04d}.png")
+
+    except Exception as e:
+        print(f"处理文件 {file_path.name} 时发生错误: {str(e)}")
+
+
+def process_nifti_folder(input_dir: str, output_root: str, slices_per_volume: int = 20) -> None:
+    """处理整个NIFTI目录
+    Process NIFTI directory
+
+    Args:
+        input_dir (str): 输入目录 / Input directory
+        output_root (str): 输出根目录 / Output root directory
+        slices_per_volume (int): 每卷选取切片数 / Slices per volume (default: 20)
+    """
+    input_path = Path(input_dir)
+    output_path = Path(output_root)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # 获取所有NIFTI文件
+    nifti_files = list(input_path.glob('*.nii')) + list(input_path.glob('*.nii.gz'))
+
+    if not nifti_files:
+        raise FileNotFoundError("未找到NIFTI文件")
+
+    # 使用并行处理改进性能
+    for nifti_file in tqdm(nifti_files, desc="处理NIFTI文件"):
+        process_nifti_file(nifti_file, output_path, slices_per_volume)
+
+
+if __name__ == "__main__":
+    # An example
+    tar_path = "/root/autodl-fs/IXI-T2.tar"
+    extract_dir = "/root/IXI-T2"
+    output_dir = "/root/IXI-T2-IMG"
+    slices_per_volume = 20
+
+    unzip_tar(tar_path, extract_dir)
+    process_nifti_folder(
+        input_dir=extract_dir,
+        output_root=output_dir,
+        slices_per_volume=slices_per_volume
+    )
+
+    print(f"处理完成！结果保存至：{output_dir}")
