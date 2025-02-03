@@ -1,4 +1,4 @@
-# MRI 数据预处理与图像重建代码说明 / MRI Data Preprocessing and Image Reconstruction Code Documentation
+# MRI 数据预处理代码说明 / MRI Data Preprocessing Code Documentation
 
 ## 概述 / Overview
 本代码实现了对fastMRI数据集中的单线圈膝关节MRI数据进行解压、预处理和图像重建的功能。主要包含tar文件解压缩和HDF5数据处理两大模块，能够从k-space数据重建MRI图像，并以指定帧数保存为PNG格式。  
