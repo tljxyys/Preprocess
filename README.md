@@ -57,7 +57,7 @@ process_h5_folder(
 我们提供了基于fastMRI官方数据knee_singlecoil_val.tar预处理的图像样本集：  
 We provide preprocessed image samples based knee_singlecoil_val.tar on the official fastMRI data:
 
-[![Download](https://img.shields.io/badge/Download_PNG_Images-Google_Drive-blue?logo=google-drive)](https://drive.google.com/file/d/1JGFZkP71IPX16ZYX1TWSs5xmvBUnpaAu/view?usp=sharing)
+[![Download](https://img.shields.io/badge/Download_FastMRI_PNG_Images-Google_Drive-blue?logo=google-drive)](https://drive.google.com/file/d/1JGFZkP71IPX16ZYX1TWSs5xmvBUnpaAu/view?usp=sharing)
 
 **数据集特性 / Dataset Characteristics**
 - 原始来源: fastMRI knee_singlecoil_val 验证集  
@@ -78,7 +78,7 @@ We provide preprocessed image samples based knee_singlecoil_val.tar on the offic
 新增基于IXI数据集的预处理结果（将NIFTI文件转为PNG图像）：  
 Newly added high-quality preprocessed data from IXI dataset:
 
-[![Download](https://img.shields.io/badge/下载_IXI_T2数据集-Google_Drive-important?logo=google-drive&style=flat-square)](https://drive.google.com/file/d/1O53qoZMVbGh0hP1m9nuPoLeSIBU3CU7H/view?usp=sharing)
+[![Download](https://img.shields.io/badge/Download_IXI_T2_IMG-Google_Drive-important?logo=google-drive&style=flat-square)](https://drive.google.com/file/d/1O53qoZMVbGh0hP1m9nuPoLeSIBU3CU7H/view?usp=sharing)
 
 **核心参数 / Key Specifications**
 | 属性                  | 参数值                     | 英文说明                    |
