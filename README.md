@@ -50,6 +50,7 @@ process_h5_folder(
     output_root="/output/image/root/", # 图像输出根目录 / Image output root
     frames_per_file=20                # 每例保存帧数 / Frames per case
 )
+```
 
 ## 可用数据集 / Available Datasets
 ### 预处理的膝关节MRI图像 / Preprocessed Knee MRI Images
@@ -66,8 +67,9 @@ We provide preprocessed image samples based knee_singlecoil_val.tar on the offic
 - 格式规格: PNG格式 (368x640 分辨率)  
   Format: PNG (368x640 resolution)
 - 命名规范: 
-  ```bash
+  ```
   {case_id}/
   ├── {case_id}_slice0000.png  # 格式保留原始相位信息
   ├── ...
   └── {case_id}_slice0019.png  # Frame indices preserved
+  ```
