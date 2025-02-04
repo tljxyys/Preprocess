@@ -1,0 +1,77 @@
+import os
+import shutil
+import random
+from PIL import Image
+import glob
+
+
+def create_dir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
+def downsample_image(img, scale):
+    w, h = img.size
+    small_img = img.resize((w // scale, h // scale), Image.BICUBIC)
+    return small_img.resize((w, h), Image.BICUBIC)
+
+
+def process_dataset(dataset_path, dataset_name):
+
+    cases = [d for d in os.listdir(dataset_path) if os.path.isdir(os.path.join(dataset_path, d))]
+
+    random.shuffle(cases)
+
+    split_point = int(len(cases) * 8 / 9)
+    train_cases = cases[:split_point]
+    valid_cases = cases[split_point:]
+
+    base_path = os.path.join('/root/med_data', dataset_name)
+    train_path = os.path.join(base_path, 'train')
+    valid_path = os.path.join(base_path, 'valid')
+    create_dir(train_path)
+    create_dir(valid_path)
+
+    for scale in [2, 3, 4]:
+        create_dir(os.path.join(base_path, f'x{scale}'))
+
+    print(f"Processing {dataset_name} training set...")
+    for case in train_cases:
+        src_case_path = os.path.join(dataset_path, case)
+        dst_case_path = os.path.join(train_path, case)
+        shutil.move(src_case_path, dst_case_path)
+
+    print(f"Processing {dataset_name} validation set...")
+    for case in valid_cases:
+        src_case_path = os.path.join(dataset_path, case)
+        dst_case_path = os.path.join(valid_path, case)
+
+        for img_path in glob.glob(os.path.join(src_case_path, '*')):
+            if img_path.lower().endswith(('.png', '.jpg', '.jpeg')):
+                img = Image.open(img_path)
+                img_name = os.path.basename(img_path)
+
+                for scale in [2, 3, 4]:
+                    down_path = os.path.join(base_path, f'x{scale}', case)
+                    create_dir(down_path)
+                    down_img = downsample_image(img, scale)
+                    down_img.save(os.path.join(down_path, img_name))
+
+        shutil.move(src_case_path, dst_case_path)
+
+
+def main():
+    datasets = ['FastMRI_Knee']
+    root_path = '/root/med_data'
+
+    for dataset in datasets:
+        print(f"\nProcessing {dataset} dataset...")
+        dataset_path = os.path.join(root_path, dataset)
+        if os.path.exists(dataset_path):
+            process_dataset(dataset_path, dataset)
+        else:
+            print(f"Warning: {dataset_path} does not exist!")
+
+
+if __name__ == "__main__":
+    main()
